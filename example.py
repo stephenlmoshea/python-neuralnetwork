@@ -1,7 +1,7 @@
-from Activation.Sigmoid import Sigmoid
-from Network.FeedForward import FeedForward
-from Train.Backpropagation import Backpropagation
-from Activation.HyperbolicTangent import HyperbolicTangent
+from Sigmoid import Sigmoid
+from FeedForward import FeedForward
+from Backpropagation import Backpropagation
+from HyperbolicTangent import HyperbolicTangent
 
 sigmoid = Sigmoid()
 
