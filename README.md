@@ -14,7 +14,7 @@ $  pip install neuralnetwork
 ```
 ## Examples
 ### Training XOR function on three layer neural network with two inputs and one output
-```
+```py
 from neuralnetwork.FeedForward import FeedForward
 from neuralnetwork.Sigmoid import Sigmoid
 from neuralnetwork.Backpropagation import Backpropagation
@@ -59,7 +59,7 @@ print(outputs[0])
 ```
 
 ### Training XOR function on three layer neural network using Hyperbolic Tangent
-```
+```py
 from neuralnetwork.FeedForward import FeedForward
 from neuralnetwork.HyperbolicTangent import HyperbolicTanget
 from neuralnetwork.Backpropagation import Backpropagation
@@ -104,7 +104,7 @@ print(outputs[0])
 ```
 
 ### Saving trained neural network to file
-```
+```py
 from neuralnetwork.FeedForward import FeedForward
 from neuralnetwork.Sigmoid import Sigmoid
 from neuralnetwork.Backpropagation import Backpropagation
@@ -135,7 +135,7 @@ feedForward.save('./network.txt')
 ```
 
 ### Load trained neural network from file
-```
+```py
 from neuralnetwork.FeedForward import FeedForward
 from neuralnetwork.Sigmoid import Sigmoid
 from neuralnetwork.Backpropagation import Backpropagation
