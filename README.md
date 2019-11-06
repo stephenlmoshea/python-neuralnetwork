@@ -72,7 +72,6 @@ feedForward = FeedForward(networkLayer, hyperbolicTangent)
 
 backpropagation = Backpropagation(feedForward,0.7,0.3,0.001)
 
-//Provide XOR training data
 trainingSet = [
                     [-1,-1,-1],
                     [-1,1,1],
@@ -87,15 +86,15 @@ while True:
     if(result):
         break
 
-feedForward.activate([0,0])
+feedForward.activate([-1,-1])
 outputs = feedForward.getOutputs()
 print(outputs[0])
 
-feedForward.activate([0,1])
+feedForward.activate([-1,1])
 outputs = feedForward.getOutputs()
 print(outputs[0])
 
-feedForward.activate([1,0])
+feedForward.activate([1,-1])
 outputs = feedForward.getOutputs()
 print(outputs[0])
 
