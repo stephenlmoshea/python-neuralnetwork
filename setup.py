@@ -8,7 +8,7 @@ setup(
   author = 'Stephen OShea',                   # Type in your name
   author_email = 'stephenlmoshea@gmail.com',      # Type in your E-Mail
   url = 'https://github.com/stephenlmoshea/python-neuralnetwork',   # Provide either the link to your github or to your website
-  download_url = 'https://github.com/stephenlmoshea/python-neuralnetwork/archive/v_01.tar.gz',    # I explain this later on
+  download_url = 'https://github.com/stephenlmoshea/python-neuralnetwork/archive/02.tar.gz',    # I explain this later on
   keywords = ['NEURAL NETWORK', 'BACKPROPAGATION', 'GRADIENT DESCENT', 'SIGMOID', 'HYPERBOLIC TANGENT'],   # Keywords that define your package best
   install_requires=[            # I get to this in a second
          'random',
