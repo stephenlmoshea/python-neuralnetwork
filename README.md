@@ -59,7 +59,8 @@ print(outputs[0])
 ```
 
 ### Training XOR function on three layer neural network using Hyperbolic Tangent
-```from neuralnetwork.FeedForward import FeedForward
+```
+from neuralnetwork.FeedForward import FeedForward
 from neuralnetwork.Sigmoid import Sigmoid
 from neuralnetwork.Backpropagation import Backpropagation
 
@@ -104,7 +105,8 @@ print(outputs[0])
 ```
 
 ### Saving trained neural network to file
-```from neuralnetwork.FeedForward import FeedForward
+```
+from neuralnetwork.FeedForward import FeedForward
 from neuralnetwork.Sigmoid import Sigmoid
 from neuralnetwork.Backpropagation import Backpropagation
 
@@ -134,7 +136,8 @@ feedForward.save('./network.txt')
 ```
 
 ### Load trained neural network from file
-```from neuralnetwork.FeedForward import FeedForward
+```
+from neuralnetwork.FeedForward import FeedForward
 from neuralnetwork.Sigmoid import Sigmoid
 from neuralnetwork.Backpropagation import Backpropagation
 
