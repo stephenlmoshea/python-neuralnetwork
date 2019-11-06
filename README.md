@@ -61,14 +61,14 @@ print(outputs[0])
 ### Training XOR function on three layer neural network using Hyperbolic Tangent
 ```
 from neuralnetwork.FeedForward import FeedForward
-from neuralnetwork.Sigmoid import Sigmoid
+from neuralnetwork.HyperbolicTangent import HyperbolicTanget
 from neuralnetwork.Backpropagation import Backpropagation
 
-sigmoid = Sigmoid()
+hyperbolicTangent = HyperbolicTangent()
 
 networkLayer = [2,2,1]
 
-feedForward = FeedForward(networkLayer, sigmoid)
+feedForward = FeedForward(networkLayer, hyperbolicTangent)
 
 backpropagation = Backpropagation(feedForward,0.7,0.3,0.001)
 
