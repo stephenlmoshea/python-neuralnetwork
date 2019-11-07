@@ -8,7 +8,7 @@ setup(
   packages = ['neuralnetwork'],   # Chose the same as "name"
   version = 'v0.5',      # Start with a small number and increase it with every change you make
   license='MIT',        # Chose a license from here: https://help.github.com/articles/licensing-a-repository
-  description = 'neuralnetwork',   # Give a short description about your library
+  description = 'Artificial Neural Network',   # Give a short description about your library
   long_description=long_description,
   long_description_content_type="text/markdown",
   author = 'Stephen OShea',                   # Type in your name
