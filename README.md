@@ -184,7 +184,7 @@ The neural network will output a 1 if the patient will develop diabetes and a 0 
 
 We then train the neural network using the training set.
 
-Finally we test the tained neural network using the validation set and output and acurracy percetange.
+Finally we test the trained neural network using the validation set and output and acurracy percetange.
 
 ```py
 import matplotlib
