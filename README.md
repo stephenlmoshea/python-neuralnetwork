@@ -160,9 +160,9 @@ print(outputs[0])
 ```
 
 ## Training Neural Network to Predict Diabetes
-For this example we will train a neural network to predict that a patient will develop diabetes within the next six months given various health measurements.
+For this example we will train a neural network to predict that a patient will develop diabetes within the next six months given various health measurements such as Number of times pregnant, Glucose Plasma, Blood Pressure Diastolic, skin fold thickness, serum insulin, Body mass index, Diabetes pedigree function, and Age.
 
-The dataset for this project is hosted by Kaggle. To download the necessary dataset for this project, please follow the instructions below.
+The dataset for this project is hosted by Kaggle. To download the necessary dataset for this example, please follow the instructions below.
 
 1. Go to https://www.kaggle.com/uciml/pima-indians-diabetes-database
 
