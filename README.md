@@ -160,7 +160,7 @@ print(outputs[0])
 ```
 
 ## Training Neural Network to Predict Diabetes
-For this example we will train a neural network to predict that a patient will develop diabetes within the next six months given various health measurements such as Number of times pregnant, Glucose Plasma, Blood Pressure Diastolic, skin fold thickness, serum insulin, Body mass index, Diabetes pedigree function, and Age.
+For this example we will train a neural network to predict whether a patient will develop diabetes within the next six months given various health measurements such as Number of times pregnant, Glucose Plasma, Blood Pressure Diastolic, skin fold thickness, serum insulin, Body mass index, Diabetes pedigree function, and Age.
 
 The dataset for this project is hosted by Kaggle. To download the necessary dataset for this example, please follow the instructions below.
 
@@ -174,11 +174,15 @@ The dataset for this project is hosted by Kaggle. To download the necessary data
 
 5. After the download is complete, unzip the zip file and move the file 'diabetes.csv' into your project folder.
 
-For this example we first preprocess the data to ensure we have no missing or zero values.  We then scale or normalise the inputs before pass to the neural network.
+For this example we first preprocess the data to ensure we have no missing or zero values.  We then scale or normalise the inputs before passint into the neural network.
 
-We then split the data into a training set and validation set which we use to test the accuracy of the trained neural network.
+We then split the data into a training and validation set which we use to test the accuracy of the trained neural network.
 
 We then construct a neural network with 8 inputs, 32 nodes in the first hidden layer, 16 nodes in the second hidden layer, and finally one node in the output layer.
+
+We then train the neural network using the training set.
+
+Finally we test the tained neural network using the validation set and output and acurracy percetange.
 
 ```py
 import matplotlib
