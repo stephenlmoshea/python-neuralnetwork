@@ -160,7 +160,7 @@ print(outputs[0])
 ```
 
 ## Training Neural Network to Predict Diabetes
-For this example we will train a neural network to predict whether a patient will develop diabetes within the next six months given various health measurements such as Number of times pregnant, Glucose Plasma, Blood Pressure Diastolic, skin fold thickness, serum insulin, Body mass index, Diabetes pedigree function, and Age.
+For this example we will train a neural network to predict whether a patient will develop diabetes within the next six months given various health measurements such as number of times pregnant, glucose plasma, blood pressure diastolic, skin fold thickness, serum insulin, body mass index, diabetes pedigree function, and age.
 
 The dataset for this project is hosted by Kaggle. To download the necessary dataset for this example, please follow the instructions below.
 
@@ -179,6 +179,8 @@ For this example we first preprocess the data to ensure we have no missing or ze
 We then split the data into a training and validation set which we use to test the accuracy of the trained neural network.
 
 We then construct a neural network with 8 inputs, 32 nodes in the first hidden layer, 16 nodes in the second hidden layer, and finally one node in the output layer.
+
+The neural network will output a 1 if the patient will develop diabetes and a 0 if the pateint will not.
 
 We then train the neural network using the training set.
 
