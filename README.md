@@ -218,7 +218,15 @@ def preprocess(df):
 
 
 
-df = pd.read_csv('diabetes.csv')
+try:
+    df = pd.read_csv('diabetes.csv')
+except:
+    print("""
+      Dataset not found in your computer.
+      Please follow the instructions in the link below to download the dataset:
+      hhttps://github.com/stephenlmoshea/neural-network-to-predict-diabetes/blob/master/how_to_download_the_dataset.txt
+      """)
+    quit()
 
 # Perform preprocessing and feature engineering
 df = preprocess(df)
