@@ -1,3 +1,5 @@
+import logging
+
 class Backpropagation:
     nodeDeltas = []
     gradients = []
@@ -61,6 +63,7 @@ class Backpropagation:
                     
     def train(self, trainingSets):
         self.numEpochs = 1
+        logging.basicConfig(level=logging.DEBUG)
         while True:
             if(self.numEpochs > self.maxNumEpochs):
                 return False
@@ -77,6 +80,9 @@ class Backpropagation:
                 
             
             globalError = sumNetworkError/len(trainingSets)
+            logging.info('--------------------------------')
+            logging.info("Num Epochs: {}".format(self.numEpochs))
+            logging.info("Global Error: {}".format(globalError))
 
             self.numEpochs = self.numEpochs + 1
 
