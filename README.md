@@ -160,6 +160,21 @@ print(outputs[0])
 ```
 
 ## Training Neural Network to Predict Diabetes
+For this example we will train a neural network to predict that a patient will develop diabetes within the next six months given various health measurements.
+
+The dataset for this project is hosted by Kaggle. To download the necessary dataset for this project, please follow the instructions below.
+
+1. Go to https://www.kaggle.com/uciml/pima-indians-diabetes-database
+
+2. Click on the 'Download All' button
+
+3. Kaggle will prompt you to sign in or to register. If you do not have a Kaggle account, you can register for one.
+
+4. Upon signing in, the download will start automatically.
+
+5. After the download is complete, unzip the zip file and move the file 'diabetes.csv' into your project folder.
+
+
 ```py
 import matplotlib
 matplotlib.use("TkAgg")
