@@ -174,7 +174,7 @@ The dataset for this project is hosted by Kaggle. To download the necessary data
 
 5. After the download is complete, unzip the zip file and move the file 'diabetes.csv' into your project folder.
 
-For this example we first preprocess the data to ensure we have no missing or zero values.  We then scale or normalise the inputs before passint into the neural network.
+For this example we first preprocess the data to ensure we have no missing or zero values.  We then scale or normalise the inputs before passing into the neural network.
 
 We then split the data into a training and validation set which we use to test the accuracy of the trained neural network.
 
