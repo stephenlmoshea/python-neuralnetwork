@@ -180,7 +180,7 @@ We then split the data into a training and validation set which we use to test t
 
 We then construct a neural network with 8 inputs, 32 nodes in the first hidden layer, 16 nodes in the second hidden layer, and finally one node in the output layer.
 
-The neural network will output a 1 if the patient will develop diabetes and a 0 if the pateint will not.
+The neural network will output a 1 if the patient will develop diabetes and a 0 otherwise.
 
 We then train the neural network using the training set.
 
