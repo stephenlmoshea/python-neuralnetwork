@@ -174,6 +174,11 @@ The dataset for this project is hosted by Kaggle. To download the necessary data
 
 5. After the download is complete, unzip the zip file and move the file 'diabetes.csv' into your project folder.
 
+For this example we first preprocess the data to ensure we have no missing or zero values.  We then scale or normalise the inputs before pass to the neural network.
+
+We then split the data into a training set and validation set which we use to test the accuracy of the trained neural network.
+
+We then construct a neural network with 8 inputs, 32 nodes in the first hidden layer, 16 nodes in the second hidden layer, and finally one node in the output layer.
 
 ```py
 import matplotlib
