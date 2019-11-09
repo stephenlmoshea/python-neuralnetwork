@@ -160,7 +160,7 @@ print(outputs[0])
 ```
 
 ## Training Neural Network to Predict Diabetes
-For this example we will train a neural network to predict whether a patient will develop diabetes within the next six months given various health measurements such as number of times pregnant, glucose plasma, blood pressure diastolic, skin fold thickness, serum insulin, body mass index, diabetes pedigree function, and age.
+For this example we will train a neural network to predict whether a patient will develop diabetes within the next five years given various health measurements such as number of times pregnant, glucose plasma, blood pressure diastolic, skin fold thickness, serum insulin, body mass index, diabetes pedigree function, and age.
 
 The dataset for this project is hosted by Kaggle. To download the necessary dataset for this example, please follow the instructions below.
 
@@ -267,7 +267,7 @@ networkLayer = [8,32,16,1]
 
 feedForward = FeedForward(networkLayer, sigmoid)
 
-backpropagation = Backpropagation(feedForward,0.7,0.8, 0.03, 2000)
+backpropagation = Backpropagation(feedForward,0.7,0.8, 0.05, 2000)
 
 backpropagation.initialise()
 result = backpropagation.train(train.values)
