@@ -29,24 +29,19 @@ class Backpropagation:
         self.nodeDeltas = []
         self.gradients = []
         self.biasGradients = []
-
         totalNumNodes = self.network.getTotalNumNodes()
         self.weightUpdates = [0] * totalNumNodes
         for i in range(totalNumNodes):
             self.weightUpdates[i] = [0] * totalNumNodes
-
         self.biasWeightUpdates = [0] * totalNumNodes
         for i in range(totalNumNodes):
             self.biasWeightUpdates[i] = [0] * totalNumNodes
-
         self.gradients = [0] * totalNumNodes
         for i in range(totalNumNodes):
             self.gradients[i] = [0] * totalNumNodes
-
         self.biasGradients = [0] * totalNumNodes
         for i in range(totalNumNodes):
             self.biasGradients[i] = [0] * totalNumNodes
-
         self.initialiseValues()
         self.initialiseWeights()
 
@@ -63,7 +58,6 @@ class Backpropagation:
                         networkLayers[num + 1]["end_node"] + 1,
                     ):
                         self.weightUpdates[i][j] = 0.0
-
                 for b in range(
                     networkLayers[num + 1]["start_node"],
                     networkLayers[num + 1]["end_node"] + 1,
@@ -73,10 +67,10 @@ class Backpropagation:
     def train(self, trainingSets):
         self.numEpochs = 1
         logging.basicConfig(level=logging.DEBUG)
+        # Have to change to a for-if slope
         while True:
             if self.numEpochs > self.maxNumEpochs:
                 return False
-
             sumNetworkError = 0
             for i in range(len(trainingSets)):
                 self.network.activate(trainingSets[i])
@@ -86,17 +80,13 @@ class Backpropagation:
                 self.calculateWeightUpdates()
                 self.applyWeightChanges()
                 sumNetworkError += self.calculateNetworkError(trainingSets[i])
-
             globalError = sumNetworkError / len(trainingSets)
             logging.info("--------------------------------")
             logging.info("Num Epochs: {}".format(self.numEpochs))
             logging.info("Global Error: {}".format(globalError))
-
             self.numEpochs = self.numEpochs + 1
-
             if globalError < self.minimumError:
                 break
-
         return True
 
     def calculateNodeDeltas(self, trainingSet):
@@ -107,7 +97,6 @@ class Backpropagation:
         startNode = networkLayers[len(networkLayers) - 1]["start_node"]
         endNode = networkLayers[len(networkLayers) - 1]["end_node"]
         activation = self.network.getActivation()
-
         j = 0
         for i in range(startNode, endNode + 1):
             if isinstance(idealOutputs, list):
@@ -118,7 +107,6 @@ class Backpropagation:
                 self.network.getNet(i)
             )
             j = j + 1
-
         for k in range(len(networkLayers) - 2, 0, -1):
             startNode = networkLayers[k]["start_node"]
             endNode = networkLayers[k]["end_node"]
@@ -142,7 +130,6 @@ class Backpropagation:
                         self.gradients[i][j] = (
                             float(self.network.getValue(i)) * self.nodeDeltas[j]
                         )
-
                 for b in range(
                     networkLayers[num + 1]["start_node"],
                     networkLayers[num + 1]["end_node"] + 1,
@@ -161,7 +148,6 @@ class Backpropagation:
                         self.weightUpdates[i][j] = (
                             self.learningRate * self.gradients[i][j]
                         ) + (self.momentum * self.weightUpdates[i][j])
-
                 for b in range(
                     networkLayers[num + 1]["start_node"],
                     networkLayers[num + 1]["end_node"] + 1,
@@ -180,7 +166,6 @@ class Backpropagation:
                         networkLayers[num + 1]["end_node"] + 1,
                     ):
                         self.network.updateWeight(i, j, self.weightUpdates[i][j])
-
                 for b in range(
                     networkLayers[num + 1]["start_node"],
                     networkLayers[num + 1]["end_node"] + 1,
@@ -204,9 +189,7 @@ class Backpropagation:
                 error = idealOutputs[j] - self.network.getValue(i)
             else:
                 error = idealOutputs - self.network.getValue(i)
-
             sum += error * error
             j = j + 1
-
         globalError = (1 / numNodes) * sum
         return globalError

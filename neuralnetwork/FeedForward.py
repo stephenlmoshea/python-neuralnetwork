@@ -15,13 +15,10 @@ class FeedForward:
         self.networkLayers = []
         startNode = 0
         endNode = 0
-
         for layer, numNodes in enumerate(networkLayers):
             if layer > 0:
                 startNode += networkLayers[layer - 1]
-
             endNode += numNodes
-
             self.networkLayers.append(
                 {
                     "num_nodes": numNodes,
@@ -29,17 +26,14 @@ class FeedForward:
                     "end_node": endNode - 1,
                 }
             )
-
         self.totalNumNodes = sum(networkLayers)
         self.activation = activation
 
     def initialise(self):
         self.net = []
-
         self.weights = [0] * self.totalNumNodes
         for i in range(self.totalNumNodes):
             self.weights[i] = [0] * self.totalNumNodes
-
         self.values = []
         self.biasWeights = [0] * self.totalNumNodes
         for i in range(self.totalNumNodes):
@@ -60,7 +54,6 @@ class FeedForward:
                         self.networkLayers[num + 1]["end_node"] + 1,
                     ):
                         self.weights[i][j] = random.randint(-5, 5) / 100
-
                 for b in range(
                     self.networkLayers[num + 1]["start_node"],
                     self.networkLayers[num + 1]["end_node"] + 1,
@@ -70,7 +63,6 @@ class FeedForward:
     def activate(self, inputs):
         for z in range(0, self.networkLayers[0]["num_nodes"]):
             self.values[z] = inputs[z]
-
         for num, layer in enumerate(self.networkLayers):
             if num > 0:
                 for j in range(layer["start_node"], layer["end_node"] + 1):
@@ -80,7 +72,6 @@ class FeedForward:
                         self.networkLayers[num - 1]["end_node"] + 1,
                     ):
                         net += float(self.values[i]) * self.weights[i][j]
-
                     net += self.biasWeights[num - 1][j]
                     self.net[j] = net
                     self.values[j] = self.activation.getActivation(net)
