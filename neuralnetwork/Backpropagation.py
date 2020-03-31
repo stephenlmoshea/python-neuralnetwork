@@ -17,6 +17,24 @@ class Backpropagation:
     def __init__(
         self, network, learningRate, momentum, minimumError=0.005, maxNumEpochs=2000
     ):
+        """
+        __init__ [summary]
+        
+        [extended_summary]
+        
+        Parameters
+        ----------
+        network : [type]
+            [description]
+        learningRate : [type]
+            [description]
+        momentum : [type]
+            [description]
+        minimumError : float, optional
+            [description], by default 0.005
+        maxNumEpochs : int, optional
+            [description], by default 2000
+        """
         self.network = network
         self.learningRate = learningRate
         self.momentum = momentum
@@ -25,6 +43,11 @@ class Backpropagation:
         self.initialise()
 
     def initialise(self):
+        """
+        initialise [summary]
+        
+        [extended_summary]
+        """
         self.network.initialise()
         self.nodeDeltas = []
         self.gradients = []
@@ -46,9 +69,19 @@ class Backpropagation:
         self.initialiseWeights()
 
     def initialiseValues(self):
+        """
+        initialiseValues S
+        
+        [extended_summary]
+        """
         self.nodeDeltas = [0.00] * self.network.getTotalNumNodes()
 
     def initialiseWeights(self):
+        """
+        initialiseWeights [summary]
+        
+        [extended_summary]
+        """
         networkLayers = self.network.getNetworkLayers()
         for num, layer in enumerate(networkLayers):
             if num < len(networkLayers) - 1:
@@ -65,6 +98,21 @@ class Backpropagation:
                     self.biasWeightUpdates[num][b] = 0.0
 
     def train(self, trainingSets):
+        """
+        train [summary]
+        
+        [extended_summary]
+        
+        Parameters
+        ----------
+        trainingSets : [type]
+            [description]
+        
+        Returns
+        -------
+        [type]
+            [description]
+        """
         self.numEpochs = 1
         logging.basicConfig(level=logging.DEBUG)
         # Have to change to a for-if slope
@@ -90,6 +138,16 @@ class Backpropagation:
         return True
 
     def calculateNodeDeltas(self, trainingSet):
+        """
+        calculateNodeDeltas [summary]
+        
+        [extended_summary]
+        
+        Parameters
+        ----------
+        trainingSet : [type]
+            [description]
+        """
         networkLayers = self.network.getNetworkLayers()
         idealOutputs = trainingSet[
             -1 * networkLayers[len(networkLayers) - 1]["num_nodes"]
@@ -119,6 +177,11 @@ class Backpropagation:
                 )
 
     def calculateGradients(self):
+        """
+        calculateGradients [summary]
+        
+        [extended_summary]
+        """
         networkLayers = self.network.getNetworkLayers()
         for num, layer in enumerate(networkLayers):
             if num < len(networkLayers) - 1:
@@ -137,6 +200,11 @@ class Backpropagation:
                     self.biasGradients[num][b] = self.nodeDeltas[b]
 
     def calculateWeightUpdates(self):
+        """
+        calculateWeightUpdates [summary]
+        
+        [extended_summary]
+        """
         networkLayers = self.network.getNetworkLayers()
         for num, layer in enumerate(networkLayers):
             if num < len(networkLayers) - 1:
@@ -157,6 +225,11 @@ class Backpropagation:
                     ) + (self.momentum * self.biasWeightUpdates[num][b])
 
     def applyWeightChanges(self):
+        """
+        applyWeightChanges [summary]
+        
+        [extended_summary]
+        """
         networkLayers = self.network.getNetworkLayers()
         for num, layer in enumerate(networkLayers):
             if num < len(networkLayers) - 1:
@@ -175,6 +248,21 @@ class Backpropagation:
                     )
 
     def calculateNetworkError(self, trainingSet):
+        """
+        calculateNetworkError [summary]
+        
+        [extended_summary]
+        
+        Parameters
+        ----------
+        trainingSet : [type]
+            [description]
+        
+        Returns
+        -------
+        [type]
+            [description]
+        """
         networkLayers = self.network.getNetworkLayers()
         idealOutputs = trainingSet[
             -1 * networkLayers[len(networkLayers) - 1]["num_nodes"]
