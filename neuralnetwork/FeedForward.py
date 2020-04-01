@@ -1,28 +1,41 @@
-from numpy import random
+import numpy as np
 import pickle
 
 
 class FeedForward:
-    networkLayers = []
+    """
+     [summary]
+    
+    [extended_summary]
+    
+    Returns
+    -------
+    [type]
+        [description]
+    """
+
+    networkLayers = np.array([])
     activation = ""
     totalNumNodes = 0
-    net = []
-    weights = []
-    biasWeights = []
-    values = []
+    net = np.array([])
+    weights = np.array([])
+    biasWeights = np.array([])
+    values = np.array([])
 
-    def __init__(self, networkLayers, activation):
+    def __init__(self, networkLayers, activation, dtype=np.float64):
         """
         __init__ [summary]
-        
+       
         [extended_summary]
-        
+       
         Parameters
         ----------
         networkLayers : [type]
             [description]
         activation : [type]
             [description]
+        dtype : data type objects, optional
+            The data-type objects (dtype) can be set to single (np.float32) or double (np.float64) precission, by default np.float64       
         """
         self.networkLayers = []
         startNode = 0
@@ -38,91 +51,109 @@ class FeedForward:
                     "end_node": endNode - 1,
                 }
             )
-        self.totalNumNodes = sum(networkLayers)
+        self.totalNumNodes = np.sum(networkLayers)
         self.activation = activation
+        self.dtype = dtype
 
     def initialise(self):
-        """
-        initialise [summary]
+        """initialise bias-neurons and their weights.
         
-        [extended_summary]
+        Bias-neurons- and their weights-matrices will be initialise by using np.zeros. The data-type (dtype) can be set 
+        in the __init__.py, and can be choosen between single (np.float32) and double (np.float64) precission.
         """
-        self.net = []
-        self.weights = [0] * self.totalNumNodes
-        for i in range(self.totalNumNodes):
-            self.weights[i] = [0] * self.totalNumNodes
-        self.values = []
-        self.biasWeights = [0] * self.totalNumNodes
-        for i in range(self.totalNumNodes):
-            self.biasWeights[i] = [0] * self.totalNumNodes
-        self.initialiseValues()
+        self.weights = np.zeros(
+            (self.totalNumNodes, self.totalNumNodes), dtype=self.dtype
+        )
+        self.biasWeights = np.zeros(
+            (self.totalNumNodes, self.totalNumNodes), dtype=self.dtype
+        )
+
+        self.initialiseValuesNet()
         self.initialiseWeights()
 
-    def initialiseValues(self):
-        """
-        initialiseValues [summary]
+    def initialiseValuesNet(self):
+        """initialiseValuesNet values and their net.
         
         [extended_summary]
         """
-        self.values = [0.00] * self.totalNumNodes
-        self.net = [0.00] * self.totalNumNodes
 
-    def initialiseWeights(self):
-        """
-        initialiseWeights S
-        
-        [extended_summary]
-        """
-        for num, layer in enumerate(self.networkLayers):
-            if num < len(self.networkLayers) - 1:
-                for i in range(layer["start_node"], layer["end_node"] + 1):
-                    for j in range(
-                        self.networkLayers[num + 1]["start_node"],
-                        self.networkLayers[num + 1]["end_node"] + 1,
-                    ):
-                        self.weights[i][j] = random.randint(-5, 5) / 100
-                for b in range(
-                    self.networkLayers[num + 1]["start_node"],
-                    self.networkLayers[num + 1]["end_node"] + 1,
-                ):
-                    self.biasWeights[num][b] = random.randint(-5, 5) / 100
+        self.values = np.zeros(self.totalNumNodes, dtype=self.dtype)
+        self.net = np.zeros(self.totalNumNodes, dtype=self.dtype)
 
-    def activate(self, inputs):
-        """
-        activate [summary]
+    def initialiseWeights(self, low=-5, high=+5):
+        """initialiseWeights for the weights and the bias-weights.
         
-        [extended_summary]
+        Based on the zero-matrix, the weights- and bias-weights-matrix will be filled with random-int, which
+        becomes float by np.divide. 
+        
+        Notes
+        -----
+        np.divide is important because it will also keep the dtype-format consistent.
         
         Parameters
         ----------
-        inputs : [type]
-            [description]
+        low : int, optional
+            lowest random-value, by default -5
+        high : int, optional
+            highes random-value, by default +5
         """
-        for z in range(0, self.networkLayers[0]["num_nodes"]):
-            self.values[z] = inputs[z]
-        for num, layer in enumerate(self.networkLayers):
-            if num > 0:
-                for j in range(layer["start_node"], layer["end_node"] + 1):
-                    net = 0
-                    for i in range(
-                        self.networkLayers[num - 1]["start_node"],
-                        self.networkLayers[num - 1]["end_node"] + 1,
-                    ):
-                        net += float(self.values[i]) * self.weights[i][j]
-                    net += self.biasWeights[num - 1][j]
-                    self.net[j] = net
-                    self.values[j] = self.activation.getActivation(net)
+
+        self.weights = np.divide(
+            np.random.randint(low=low, high=high, size=self.weights.shape),
+            100.0,
+            dtype=self.dtype,
+        )
+        self.biasWeights = np.divide(
+            np.random.randint(low=low, high=high, size=self.biasWeights.shape),
+            100.0,
+            dtype=self.dtype,
+        )
+
+    def activate(self, inputs):
+        """activate the forward propagation.
+        
+        For activate the forward propagation, the values(dendrites) will be elementwise combined with the 
+        weights (synapes) plus the bias. This will be performed by numpy. Furthermore, the activation functions
+        will be activated to the values.
+        
+        Notes:
+        ------
+        A more detail description is provided by Deep Learning: Ian Goodfellow et al. page 205
+        
+        Parameters
+        ----------
+        inputs : array
+            inputs as float array to be processed
+        """
+        # Defining the h^0 = x
+        _end = self.networkLayers[0]["num_nodes"]
+        self.values[0:_end] = inputs[0:_end]
+
+        # Connecting the layers (input, hidden, and target) via j-index
+        for i, layer in enumerate(self.networkLayers[1:]):
+            # Prevouis layer
+            j = np.arange(
+                self.networkLayers[i]["start_node"],
+                self.networkLayers[i]["end_node"] + 1,
+            )
+            # Current layer
+            k = np.arange(layer["start_node"], layer["end_node"] + 1)
+
+            # Apply feedback transformation
+            self.net[k] = np.add(
+                self.biasWeights[i, k], np.dot(self.values[j], self.weights[j, k])
+            )
+            
+            # Apply activation function
+            self.values[k] = self.activation.getActivation(self.net[k])
 
     def getOutputs(self):
-        """
-        getOutputs [summary]
-        
-        [extended_summary]
+        """getOutputs returns the predicted values
         
         Returns
         -------
-        [type]
-            [description]
+        array
+            Returns the predicted values as float array
         """
         startNode = self.networkLayers[len(self.networkLayers) - 1]["start_node"]
         endNode = self.networkLayers[len(self.networkLayers) - 1]["end_node"]
