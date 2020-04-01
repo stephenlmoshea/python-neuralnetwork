@@ -143,7 +143,7 @@ class FeedForward:
             self.net[k] = np.add(
                 self.biasWeights[i, k], np.dot(self.values[j], self.weights[j, k])
             )
-            
+
             # Apply activation function
             self.values[k] = self.activation.getActivation(self.net[k])
 
@@ -342,6 +342,9 @@ class FeedForward:
             [description]
         """
         return self.totalNumNodes
+
+    def getDtype(self):
+        return self.dtype
 
     def save(self, filename):
         """
