@@ -1,21 +1,31 @@
 import logging
+import numpy as np
 
 
 class Backpropagation:
-    nodeDeltas = []
-    gradients = []
-    biasGradients = []
-    learningRate = []
-    momentum = []
-    weightUpdates = []
-    biasWeightUpdates = []
+    """Backpropagation
+    
+    The Backpropagation class calculates the minimum value of the error function in relation to the training-set and the activation function.
+    The technique for achieving this goal is called the delta rule or gradient descent. 
+    
+    """
+
+    nodeDeltas = np.array([])
+    gradients = np.array([])
+    biasGradients = np.array([])
+    learningRate = np.array([])
+    eta = np.array([])
+    weightUpdates = np.array([])
+    biasWeightUpdates = np.array([])
     minimumError = ""
     maxNumEpochs = ""
     numEpochs = ""
-    network = []
+    network = np.array([])
+    delta = np.float64
+    networkLayers = []
 
     def __init__(
-        self, network, learningRate, momentum, minimumError=0.005, maxNumEpochs=2000
+        self, network, learningRate, eta, minimumError=0.005, maxNumEpochs=2000
     ):
         """
         __init__ [summary]
@@ -24,20 +34,20 @@ class Backpropagation:
         
         Parameters
         ----------
-        network : [type]
-            [description]
-        learningRate : [type]
-            [description]
-        momentum : [type]
-            [description]
+        network : class
+            class of FeedForward-Routine
+        learningRate : float
+            Learning rate of the MLP
+        eta : float
+            Error correction factor
         minimumError : float, optional
-            [description], by default 0.005
+            Minimal error to stop the training, by default 0.005
         maxNumEpochs : int, optional
-            [description], by default 2000
+            Maxinum numbers of epochs before stopping the training, by default 2000
         """
         self.network = network
         self.learningRate = learningRate
-        self.momentum = momentum
+        self.eta = eta
         self.minimumError = minimumError
         self.maxNumEpochs = maxNumEpochs
         self.initialise()
@@ -49,69 +59,47 @@ class Backpropagation:
         [extended_summary]
         """
         self.network.initialise()
-        self.nodeDeltas = []
-        self.gradients = []
-        self.biasGradients = []
-        totalNumNodes = self.network.getTotalNumNodes()
-        self.weightUpdates = [0] * totalNumNodes
-        for i in range(totalNumNodes):
-            self.weightUpdates[i] = [0] * totalNumNodes
-        self.biasWeightUpdates = [0] * totalNumNodes
-        for i in range(totalNumNodes):
-            self.biasWeightUpdates[i] = [0] * totalNumNodes
-        self.gradients = [0] * totalNumNodes
-        for i in range(totalNumNodes):
-            self.gradients[i] = [0] * totalNumNodes
-        self.biasGradients = [0] * totalNumNodes
-        for i in range(totalNumNodes):
-            self.biasGradients[i] = [0] * totalNumNodes
+        self.nodeDeltas = np.array([])
+        self.gradients = np.array([])
+        self.biasGradients = np.array([])
+        self.totalNumNodes = self.network.getTotalNumNodes()
+        self.dtype = self.network.getDtype()
+        self.networkLayers = self.network.getNetworkLayers()
+        # initiale the weight, bias, and gradients matrices
+        self.weightUpdates = np.zeros(
+            (self.totalNumNodes, self.totalNumNodes), dtype=self.dtype
+        )
+        self.biasWeightUpdates = np.zeros(
+            (self.totalNumNodes, self.totalNumNodes), dtype=self.dtype
+        )
+        self.gradients = np.zeros(
+            (self.totalNumNodes, self.totalNumNodes), dtype=self.dtype
+        )
+        self.biasGradients = np.zeros(
+            (self.totalNumNodes, self.totalNumNodes), dtype=self.dtype
+        )
         self.initialiseValues()
-        self.initialiseWeights()
 
     def initialiseValues(self):
         """
-        initialiseValues S
-        
-        [extended_summary]
+        initialiseValues inital the values array
         """
-        self.nodeDeltas = [0.00] * self.network.getTotalNumNodes()
-
-    def initialiseWeights(self):
-        """
-        initialiseWeights [summary]
-        
-        [extended_summary]
-        """
-        networkLayers = self.network.getNetworkLayers()
-        for num, layer in enumerate(networkLayers):
-            if num < len(networkLayers) - 1:
-                for i in range(layer["start_node"], layer["end_node"] + 1):
-                    for j in range(
-                        networkLayers[num + 1]["start_node"],
-                        networkLayers[num + 1]["end_node"] + 1,
-                    ):
-                        self.weightUpdates[i][j] = 0.0
-                for b in range(
-                    networkLayers[num + 1]["start_node"],
-                    networkLayers[num + 1]["end_node"] + 1,
-                ):
-                    self.biasWeightUpdates[num][b] = 0.0
+        self.nodeDeltas = np.zeros(self.totalNumNodes, dtype=self.dtype)
 
     def train(self, trainingSets):
-        """
-        train [summary]
+        """train the mlp-network.
         
-        [extended_summary]
+        Training of the mlp-network for a given `trainingSets` for maximum number of epchos. 
         
         Parameters
         ----------
-        trainingSets : [type]
-            [description]
+        trainingSets : array
+            The training set is provided as float-array where X- and y-values are keeped together.
         
         Returns
         -------
-        [type]
-            [description]
+         : bool
+            Return a bool for indicating successful (True) or failed (False) learning.
         """
         self.numEpochs = 1
         logging.basicConfig(level=logging.DEBUG)
@@ -121,8 +109,10 @@ class Backpropagation:
                 return False
             sumNetworkError = 0
             for i in range(len(trainingSets)):
+                # Switching to FeedForworad.py
                 self.network.activate(trainingSets[i])
                 outputs = self.network.getOutputs()
+                # Come back to Backpropagation.py
                 self.calculateNodeDeltas(trainingSets[i])
                 self.calculateGradients()
                 self.calculateWeightUpdates()
@@ -138,115 +128,139 @@ class Backpropagation:
         return True
 
     def calculateNodeDeltas(self, trainingSet):
-        """
-        calculateNodeDeltas [summary]
+        """calculateNodeDeltas, error of each node.
         
-        [extended_summary]
         
         Parameters
         ----------
-        trainingSet : [type]
-            [description]
+        trainingSets : array
+            The training set is provided as float-array where X- and y-values are keeped together.
         """
-        networkLayers = self.network.getNetworkLayers()
         idealOutputs = trainingSet[
-            -1 * networkLayers[len(networkLayers) - 1]["num_nodes"]
+            -1 * self.networkLayers[len(self.networkLayers) - 1]["num_nodes"]
         ]
-        startNode = networkLayers[len(networkLayers) - 1]["start_node"]
-        endNode = networkLayers[len(networkLayers) - 1]["end_node"]
+        # Initial phase
+        startNode = self.networkLayers[len(self.networkLayers) - 1]["start_node"]
+        endNode = self.networkLayers[len(self.networkLayers) - 1]["end_node"]
+        actl_index = np.arange(startNode, endNode + 1, dtype=np.int)
         activation = self.network.getActivation()
+        """
         j = 0
         for i in range(startNode, endNode + 1):
             if isinstance(idealOutputs, list):
-                error = self.network.getValue(i) - idealOutputs[j]
+                error = self.network.getValueEntry(i) - idealOutputs[j]
             else:
-                error = self.network.getValue(i) - idealOutputs
+                error = self.network.getValueEntry(i) - idealOutputs
             self.nodeDeltas[i] = (-1 * error) * activation.getDerivative(
-                self.network.getNet(i)
+                self.network.getNetEntry(i)
             )
             j = j + 1
-        for k in range(len(networkLayers) - 2, 0, -1):
-            startNode = networkLayers[k]["start_node"]
-            endNode = networkLayers[k]["end_node"]
-            for z in range(startNode, endNode + 1):
-                sum = 0
-                for connectNode, weight in enumerate(self.network.getWeight(z)):
-                    sum += weight * self.nodeDeltas[connectNode]
-                self.nodeDeltas[z] = (
-                    activation.getDerivative(self.network.getNet(z)) * sum
-                )
+        print("a", self.nodeDeltas)
+        """
+        error = self.network.getValueEntry(actl_index) - idealOutputs
+
+        self.nodeDeltas[actl_index] = np.multiply(
+            -error,
+            activation.getDerivative(self.network.getNetEntry(actl_index)),
+            dtype=self.dtype,
+        )
+
+        for k in range(len(self.networkLayers) - 2, 0, -1):
+            startNode = self.networkLayers[k]["start_node"]
+            endNode = self.networkLayers[k]["end_node"]
+            actl_index = np.arange(startNode, endNode + 1, dtype=np.int)
+            connectNode = np.arange(len(self.network.getWeight()), dtype=np.int)
+            # Calculating the node deltas
+            self.nodeDeltas[actl_index] = np.multiply(
+                np.dot(
+                    self.network.getWeightEntry(actl_index),
+                    self.nodeDeltas[connectNode],
+                ),
+                activation.getDerivative(self.network.getNetEntry(actl_index)),
+                dtype=self.dtype,
+            )
 
     def calculateGradients(self):
+        """calculateGradients, gradient of each value and bias.
         """
-        calculateGradients [summary]
-        
-        [extended_summary]
-        """
-        networkLayers = self.network.getNetworkLayers()
-        for num, layer in enumerate(networkLayers):
-            if num < len(networkLayers) - 1:
-                for i in range(layer["start_node"], layer["end_node"] + 1):
-                    for j in range(
-                        networkLayers[num + 1]["start_node"],
-                        networkLayers[num + 1]["end_node"] + 1,
-                    ):
-                        self.gradients[i][j] = (
-                            float(self.network.getValue(i)) * self.nodeDeltas[j]
-                        )
-                for b in range(
-                    networkLayers[num + 1]["start_node"],
-                    networkLayers[num + 1]["end_node"] + 1,
-                ):
-                    self.biasGradients[num][b] = self.nodeDeltas[b]
+
+        for num, layer in enumerate(self.networkLayers[:-1]):
+            prev_index = np.arange(
+                layer["start_node"], layer["end_node"] + 1, dtype=np.int
+            )  # similiar to i
+            actl_index = np.arange(
+                self.networkLayers[num + 1]["start_node"],
+                self.networkLayers[num + 1]["end_node"] + 1,
+                dtype=np.int,
+            )  # similiar to j
+            # Value-Gradient
+            self.gradients[prev_index, actl_index] = np.multiply(
+                self.network.getValueEntry(prev_index),
+                self.nodeDeltas[actl_index],
+                dtype=self.dtype,
+            )
+            # Bias-Gradient
+            self.biasGradients[num, actl_index] = self.nodeDeltas[actl_index]
 
     def calculateWeightUpdates(self):
+        """calculateWeightUpdates of the 'new' weights and bias-weights.
         """
-        calculateWeightUpdates [summary]
-        
-        [extended_summary]
-        """
-        networkLayers = self.network.getNetworkLayers()
-        for num, layer in enumerate(networkLayers):
-            if num < len(networkLayers) - 1:
-                for i in range(layer["start_node"], layer["end_node"] + 1):
-                    for j in range(
-                        networkLayers[num + 1]["start_node"],
-                        networkLayers[num + 1]["end_node"] + 1,
-                    ):
-                        self.weightUpdates[i][j] = (
-                            self.learningRate * self.gradients[i][j]
-                        ) + (self.momentum * self.weightUpdates[i][j])
-                for b in range(
-                    networkLayers[num + 1]["start_node"],
-                    networkLayers[num + 1]["end_node"] + 1,
-                ):
-                    self.biasWeightUpdates[num][b] = (
-                        self.learningRate * self.biasGradients[num][b]
-                    ) + (self.momentum * self.biasWeightUpdates[num][b])
-
+        for num, layer in enumerate(self.networkLayers[:-1]):
+            prev_index = np.arange(
+                layer["start_node"], layer["end_node"] + 1, dtype=np.int
+            )  # similiar to i
+            actl_index = np.arange(
+                self.networkLayers[num + 1]["start_node"],
+                self.networkLayers[num + 1]["end_node"] + 1,
+                dtype=np.int,
+            )  # similiar to j
+            # Updating the weights
+            #print(prev_index)
+            self.weightUpdates[prev_index, actl_index] = np.add(
+                np.multiply(
+                    self.learningRate,
+                    self.gradients[prev_index, actl_index],
+                    dtype=self.dtype,
+                ),
+                np.multiply(
+                    self.eta,
+                    self.weightUpdates[prev_index, actl_index],
+                    dtype=self.dtype,
+                ),
+                dtype=self.dtype,
+            )
+            # Updating the bias-weights
+            self.biasWeightUpdates[num, actl_index] = np.add(
+                np.multiply(
+                    self.learningRate,
+                    self.biasGradients[num, actl_index],
+                    dtype=self.dtype,
+                ),
+                np.multiply(
+                    self.eta, self.biasWeightUpdates[num, actl_index], dtype=self.dtype,
+                ),
+            )
+            
     def applyWeightChanges(self):
+        """applyWeightChanges of the gradient correction to the layers.
         """
-        applyWeightChanges [summary]
+        for num, layer in enumerate(self.networkLayers[:-1]):
+            prev_index = np.arange(
+                layer["start_node"], layer["end_node"] + 1, dtype=np.int
+            )  # similiar to i
+            actl_index = np.arange(
+                self.networkLayers[num + 1]["start_node"],
+                self.networkLayers[num + 1]["end_node"] + 1,
+                dtype=np.int,
+            )  # similiar to j
+            self.network.updateWeight(
+                prev_index, actl_index, self.weightUpdates[prev_index, actl_index]
+            )
+            self.network.updateBiasWeight(
+                num, actl_index, self.biasWeightUpdates[num, actl_index]
+            )
         
-        [extended_summary]
-        """
-        networkLayers = self.network.getNetworkLayers()
-        for num, layer in enumerate(networkLayers):
-            if num < len(networkLayers) - 1:
-                for i in range(layer["start_node"], layer["end_node"] + 1):
-                    for j in range(
-                        networkLayers[num + 1]["start_node"],
-                        networkLayers[num + 1]["end_node"] + 1,
-                    ):
-                        self.network.updateWeight(i, j, self.weightUpdates[i][j])
-                for b in range(
-                    networkLayers[num + 1]["start_node"],
-                    networkLayers[num + 1]["end_node"] + 1,
-                ):
-                    self.network.updateBiasWeight(
-                        num, b, self.biasWeightUpdates[num][b]
-                    )
-
+        
     def calculateNetworkError(self, trainingSet):
         """
         calculateNetworkError [summary]
@@ -263,20 +277,19 @@ class Backpropagation:
         [type]
             [description]
         """
-        networkLayers = self.network.getNetworkLayers()
         idealOutputs = trainingSet[
-            -1 * networkLayers[len(networkLayers) - 1]["num_nodes"]
+            -1 * self.networkLayers[len(self.networkLayers) - 1]["num_nodes"]
         ]
-        startNode = networkLayers[len(networkLayers) - 1]["start_node"]
-        endNode = networkLayers[len(networkLayers) - 1]["end_node"]
-        numNodes = networkLayers[len(networkLayers) - 1]["num_nodes"]
+        startNode = self.networkLayers[len(self.networkLayers) - 1]["start_node"]
+        endNode = self.networkLayers[len(self.networkLayers) - 1]["end_node"]
+        numNodes = self.networkLayers[len(self.networkLayers) - 1]["num_nodes"]
         j = 0
         sum = 0
         for i in range(startNode, endNode + 1):
             if isinstance(idealOutputs, list):
-                error = idealOutputs[j] - self.network.getValue(i)
+                error = idealOutputs[j] - self.network.getValueEntry(i)
             else:
-                error = idealOutputs - self.network.getValue(i)
+                error = idealOutputs - self.network.getValueEntry(i)
             sum += error * error
             j = j + 1
         globalError = (1 / numNodes) * sum

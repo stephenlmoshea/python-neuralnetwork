@@ -3,16 +3,7 @@ import pickle
 
 
 class FeedForward:
-    """
-     [summary]
-    
-    [extended_summary]
-    
-    Returns
-    -------
-    [type]
-        [description]
-    """
+    """FeedForward"""
 
     networkLayers = np.array([])
     activation = ""
@@ -23,10 +14,7 @@ class FeedForward:
     values = np.array([])
 
     def __init__(self, networkLayers, activation, dtype=np.float64):
-        """
-        __init__ [summary]
-       
-        [extended_summary]
+        """__init__.
        
         Parameters
         ----------
@@ -72,9 +60,7 @@ class FeedForward:
         self.initialiseWeights()
 
     def initialiseValuesNet(self):
-        """initialiseValuesNet values and their net.
-        
-        [extended_summary]
+        """initialiseValuesNet values- and  net-array.
         """
 
         self.values = np.zeros(self.totalNumNodes, dtype=self.dtype)
@@ -160,54 +146,44 @@ class FeedForward:
         return self.values[startNode : endNode + 1]
 
     def getNetworkLayers(self):
-        """
-        getNetworkLayers [summary]
-        
-        [extended_summary]
+        """getNetworkLayers.
         
         Returns
         -------
-        [type]
-            [description]
+         : dict 
+            Dictonary of the network-layers including total-, start-, and end-number of nodes.
         """
         return self.networkLayers
 
-    def getValue(self, index):
-        """
-        getValue [summary]
-        
-        [extended_summary]
-        
-        Parameters
-        ----------
-        index : [type]
-            [description]
+    def getValue(self):
+        """getValue.
         
         Returns
         -------
-        [type]
-            [description]
-        """
-        return self.values[index]
-
-    def getValues(self):
-        """
-        getValues [summary]
-        
-        [extended_summary]
-        
-        Returns
-        -------
-        [type]
-            [description]
+         : array
+            All values as float-array
         """
         return self.values
 
-    def getActivation(self):
-        """
-        getActivation [summary]
+    def getValueEntry(self, index):
+        """getValueEntry.
         
-        [extended_summary]
+        Returns the values for a explitic list of array-indices
+        
+        Parameters
+        ----------
+        index : list
+            List of the array-indices to select
+        
+        Returns
+        -------
+        : array
+            List of crop array-entries as array
+        """
+        return self.values[index]
+
+    def getActivation(self):
+        """getActivation [summary]
         
         Returns
         -------
@@ -216,43 +192,60 @@ class FeedForward:
         """
         return self.activation
 
-    def getNet(self, index):
-        """
-        getNet [summary]
-        
-        [extended_summary]
-        
-        Parameters
-        ----------
-        index : [type]
-            [description]
+    def getNet(self):
+        """getNet returns the net.
         
         Returns
         -------
-        [type]
-            [description]
+        : array
+            float-array of the net
+        """
+        return self.net
+
+    def getNetEntry(self, index):
+        """getNetEntry entry-value of the net.
+        
+        getNetEntry returns the current entry of the net based on the current index.
+        Parameters
+        ----------
+        index : list
+            List of the array-indices to select
+        
+        Returns
+        -------
+         : float 
+            entry of the net based on the index
         """
         return self.net[index]
 
-    def getWeight(self, index):
+    def getWeight(self):
+        """getWeight return the weight.
+        
+        Returns
+        -------
+        : array
+            float-array of the weights
         """
-        getWeight [summary]
+        return self.weights
+
+    def getWeightEntry(self, index):
+        """getWeightEntry entry-value of the weight.
         
         [extended_summary]
         
         Parameters
         ----------
-        index : [type]
-            [description]
+        index : list
+            List of the array-indices to select
         
         Returns
         -------
-        [type]
-            [description]
+         : float 
+            entry of the net based on the index
         """
         return self.weights[index]
 
-    def getBiasWeights(self):
+    def getBiasWeight(self):
         """
         getBiasWeights [summary]
         
@@ -265,16 +258,16 @@ class FeedForward:
         """
         return self.biasWeights
 
-    def getBiasWeight(self, index):
+    def getBiasWeightEntire(self, index):
         """
-        getBiasWeight [summary]
+        getBiasWeightEntire [summary]
         
         [extended_summary]
         
         Parameters
         ----------
-        index : [type]
-            [description]
+        index : list
+            List of the array-indices to select
         
         Returns
         -------
@@ -297,21 +290,19 @@ class FeedForward:
         self.biasWeights = biasWeights
 
     def updateWeight(self, i, j, weight):
-        """
-        updateWeight [summary]
-        
-        [extended_summary]
+        """updateWeight
         
         Parameters
         ----------
-        i : [type]
-            [description]
-        j : [type]
-            [description]
-        weight : [type]
-            [description]
+        i : list
+            int-list of the column-entries
+        j : list
+            int-list of the row-entries
+        weight : array
+            updated weight-coefficients
         """
-        self.weights[i][j] += weight
+        self.weights[i, j] += weight
+        #self.weights[i, j] = np.add(self.weights[i, j], weight, dtype=self.dtype)
 
     def updateBiasWeight(self, i, j, weight):
         """
@@ -321,61 +312,60 @@ class FeedForward:
         
         Parameters
         ----------
-        i : [type]
-            [description]
-        j : [type]
-            [description]
-        weight : [type]
-            [description]
+        i : list
+            int-list of the column-entries
+        j : list
+            int-list of the row-entries
+        weight : array
+             updated bias-weight-coefficients
         """
-        self.biasWeights[i][j] += weight
+        self.biasWeights[i, j]  += weight
+        #self.biasWeights[i, j] = np.add(
+        #    self.biasWeights[i, j], weight, dtype=self.dtype
+        #)
 
     def getTotalNumNodes(self):
-        """
-        getTotalNumNodes [summary]
-        
-        [extended_summary]
+        """getTotalNumNodes.
         
         Returns
         -------
-        [type]
-            [description]
+         : int
+            Total number of nodes as int
         """
         return self.totalNumNodes
 
     def getDtype(self):
+        """getDtype."""
         return self.dtype
 
     def save(self, filename):
-        """
-        save [summary]
+        """save the trained MLP-network.
         
-        [extended_summary]
+        Saved the MLP-network as binary `pickle`-file.
         
         Parameters
         ----------
-        filename : [type]
-            [description]
+        filename : str
+            filename of the to save pickle-file
         """
         with open(filename, "wb") as network_file:
             pickle.dump(self, network_file)
 
     @staticmethod
     def load(filename):
-        """
-        load [summary]
+        """load a trained MLP-network.
         
-        [extended_summary]
+        load a pre-trained MLP-network from binary `pickle`-file.
         
         Parameters
         ----------
-        filename : [type]
-            [description]
+        filename : str
+            filename of the to load pickle-file
         
         Returns
         -------
-        [type]
-            [description]
+         : array
+            gives back the weight and bias coefficients of the MLP-network
         """
         with open(filename, "rb") as network_file:
             network = pickle.load(network_file)
