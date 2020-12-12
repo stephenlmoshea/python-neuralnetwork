@@ -4,7 +4,7 @@ from FeedForward import FeedForward
 from Sigmoid import Sigmoid
 from Backpropagation import Backpropagation
 
-class BackpropagationTest(unittest.TestCase):
+class TestBackpropagation(unittest.TestCase):
     def testItLearnsOrFunction(self):
         sigmoid = Sigmoid()
 
