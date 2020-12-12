@@ -99,14 +99,20 @@ class FeedForward:
     def getWeight(self, index):
         return self.weights[index]
 
+    def getWeights(self):
+        return self.weights
+
+    def setWeights(self, weights):
+        self.weights = weights
+
     def getBiasWeights(self):
         return self.biasWeights
 
-    def getBiasWeight(self, index):
-        return self.biasWeights[index]
-        
     def setBiasWeights(self, biasWeights):
         self.biasWeights = biasWeights
+
+    def getBiasWeight(self, index):
+        return self.biasWeights[index]
 
     def updateWeight(self, i, j, weight):
         self.weights[i][j] += weight
