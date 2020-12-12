@@ -462,7 +462,7 @@ class TestBackpropagation(unittest.TestCase):
             if(result):
                 break
 
-        feedForward.save('./network');
+        feedForward.save('./network')
 
         feedForward2 = FeedForward.load('./network')
 
