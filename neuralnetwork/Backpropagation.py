@@ -71,16 +71,17 @@ class Backpropagation:
             sumNetworkError = 0
             for i in range(len(trainingSets)):
                 self.network.activate(trainingSets[i])
-                outputs = self.network.getOutputs()
                 self.calculateNodeDeltas(trainingSets[i])
                 self.calculateGradients()
                 self.calculateWeightUpdates()
                 self.applyWeightChanges()
                 sumNetworkError += self.calculateNetworkError(trainingSets[i])
+                logging.info('--------------------------------')
+                logging.info("Inputs: {}, Outputs: {}, Network Error: {}".format(trainingSets[i],self.network.getOutputs(),self.calculateNetworkError(trainingSets[i])))
                 
             
             globalError = sumNetworkError/len(trainingSets)
-            logging.info('--------------------------------')
+            
             logging.info("Num Epochs: {}".format(self.numEpochs))
             logging.info("Global Error: {}".format(globalError))
 
