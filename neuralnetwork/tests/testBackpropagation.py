@@ -4,8 +4,9 @@ from FeedForward import FeedForward
 from Sigmoid import Sigmoid
 from HyperbolicTangent import HyperbolicTangent
 from Backpropagation import Backpropagation
+from .testBase import TestBase
 
-class TestBackpropagation(unittest.TestCase):
+class TestBackpropagation(TestBase):
     def testItLearnsOrFunction(self):
         sigmoid = Sigmoid()
 
