@@ -1,11 +1,13 @@
 import unittest
 
-from FeedForward import FeedForward
-from Sigmoid import Sigmoid
-from HyperbolicTangent import HyperbolicTangent
 from Backpropagation import Backpropagation
+from FeedForward import FeedForward
+from HyperbolicTangent import HyperbolicTangent
+from Sigmoid import Sigmoid
+from .testBase import TestBase
 
-class TestFeedForward(unittest.TestCase):
+
+class TestFeedForward(TestBase):
     network = ''
     nodesPerLayer = []
     activation = ''
@@ -54,26 +56,24 @@ class TestFeedForward(unittest.TestCase):
         self.assertEquals(round(outputs[0],2), 0.49)
 
     def testActivatingNetworkWithValidInputsProducesValidOutputs(self):
-        self.nodesPerLayer = [2, 2, 2]
-        self.layers = self.getLayersForTwoOutputs()
-        self.activation = Sigmoid()
-        self.network = FeedForward(self.nodesPerLayer, self.activation)
+        nodesPerLayer = [2, 2, 2]
+        activation = Sigmoid()
+        network = FeedForward(nodesPerLayer, activation)
 
-        self.initialiseNetworkWithTwoOutputs()
-        self.network.activate([0,1])
-        outputs = self.network.getOutputs()
+        self.initialiseNetworkWithTwoOutputs(network)
+        network.activate([0,1])
+        outputs = network.getOutputs()
         self.assertEquals(round(outputs[0],3), 0.505)
         self.assertEquals(round(outputs[1],3), 0.499)
 
     def testItLearnsWeightsAndOutputsForXORFunctionWithTwoOutputs(self):
-        self.nodesPerLayer = [2, 2, 2]
-        self.layers = self.getLayersForTwoOutputs()
-        self.activation = Sigmoid()
-        self.network = FeedForward(self.nodesPerLayer, self.activation)
+        nodesPerLayer = [2, 2, 2]
+        activation = Sigmoid()
+        network = FeedForward(nodesPerLayer, activation)
 
-        backpropagation = Backpropagation(self.network,0.7,0.3)
+        backpropagation = Backpropagation(network,0.7,0.3)
 
-        self.initialiseNetworkWithTwoOutputs()
+        self.initialiseNetworkWithTwoOutputs(network)
 
         trainingSet = [
             [0,0,0],
@@ -83,36 +83,35 @@ class TestFeedForward(unittest.TestCase):
         ]
 
         while True:
-            backpropagation.initialise()
             result = backpropagation.train(trainingSet)
 
             if(result):
                 break
 
-        self.network.activate([0,0])
-        outputs = self.network.getOutputs()
+        network.activate([0,0])
+        outputs = network.getOutputs()
         self.assertEquals(outputs[0], 0.073974751048076)
         self.assertEquals(outputs[1], 0.076405873198382)
 
-        self.network.activate([0,1])
-        outputs = self.network.getOutputs()
+        network.activate([0,1])
+        outputs = network.getOutputs()
         self.assertEquals(outputs[0], 0.0011872968318554)
         self.assertEquals(outputs[1], 0.90067060908902)
 
-        self.network.activate([1,0])
-        outputs = self.network.getOutputs()
+        network.activate([1,0])
+        outputs = network.getOutputs()
         self.assertEquals(outputs[0], 0.90222312526496)
         self.assertEquals(outputs[1], 0.00080085411873496)
 
-        self.network.activate([1,1])
-        outputs = self.network.getOutputs()
+        network.activate([1,1])
+        outputs = network.getOutputs()
         self.assertEquals(outputs[0], 0.063898658496818)
         self.assertEquals(outputs[1], 0.06729508546056)
 
         expectedWeights = []
-        expectedWeights = [0] * self.network.getTotalNumNodes()
-        for i in range(self.network.getTotalNumNodes()):
-            expectedWeights[i] = [0] * self.network.getTotalNumNodes()
+        expectedWeights = [0] * network.getTotalNumNodes()
+        for i in range(network.getTotalNumNodes()):
+            expectedWeights[i] = [0] * network.getTotalNumNodes()
 
         expectedWeights[0][2] = 3.0472441618378
         expectedWeights[0][3] = -3.7054643380452
@@ -123,7 +122,7 @@ class TestFeedForward(unittest.TestCase):
         expectedWeights[3][4] = -7.0441994420989
         expectedWeights[3][5] = 5.5300351551941
 
-        self.assertEquals(expectedWeights, self.network.getWeights())
+        self.assertEquals(expectedWeights, network.getWeights())
         
     def getLayers(self):
         return [
@@ -176,20 +175,6 @@ class TestFeedForward(unittest.TestCase):
             'biasWeights' : biasWeights
         }
 
-    def initialiseNetworkWithTwoOutputs(self):
-        self.network.initialise()
-        weights = self.getWeightsForTwoOutputs()
-        biasWeights = self.getBiasWeightsForTwoOutputs()
-
-        self.network.setWeights(weights)
-        self.network.setBiasWeights(biasWeights)
-
-        return {
-            'weights' : weights,
-            'biasWeights' : biasWeights
-        }
-
-
     def getWeights(self):
         weights = []
         weights = [0] * self.network.getTotalNumNodes()
@@ -205,23 +190,6 @@ class TestFeedForward(unittest.TestCase):
         
         return weights
 
-    def getWeightsForTwoOutputs(self):
-        weights = []
-        weights = [0] * self.network.getTotalNumNodes()
-        for i in range(self.network.getTotalNumNodes()):
-            weights[i] = [0] * self.network.getTotalNumNodes()
-
-        weights[0][2] = 0.01
-        weights[0][3] = -0.01
-        weights[1][2] = 0.04
-        weights[1][3] = 0.04
-        weights[2][4] = 0
-        weights[2][5] = -0.02
-        weights[3][4] = -0.02
-        weights[3][5] = 0.03
-        
-        return weights
-
     def getBiasWeights(self):
         biasWeights = []
         biasWeights = [0] * self.network.getTotalNumNodes()
@@ -231,19 +199,6 @@ class TestFeedForward(unittest.TestCase):
         biasWeights[0][2] = 0.04
         biasWeights[0][3] = 0.02
         biasWeights[1][4] = -0.02
-        
-        return biasWeights
-
-    def getBiasWeightsForTwoOutputs(self):
-        biasWeights = []
-        biasWeights = [0] * self.network.getTotalNumNodes()
-        for i in range(self.network.getTotalNumNodes()):
-            biasWeights[i] = [0] * self.network.getTotalNumNodes()
-
-        biasWeights[0][2] = -0.03
-        biasWeights[0][3] = -0.03
-        biasWeights[1][4] = 0.03
-        biasWeights[1][5] = -0.01
         
         return biasWeights
 
