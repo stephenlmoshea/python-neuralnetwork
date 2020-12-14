@@ -178,5 +178,14 @@ class Backpropagation:
     def getGradients(self):
         return self.gradients
 
+    def getBiasGradients(self):
+        return self.biasGradients
+
+    def getWeightUpdates(self):
+        return self.weightUpdates
+
+    def getBiasWeightUpdates(self):
+        return self.biasWeightUpdates
+
         
 

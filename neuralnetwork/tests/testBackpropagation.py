@@ -56,13 +56,132 @@ class TestBackpropagation(TestBase):
         expectedGradients[3][4] = -0.062176480401586354
         expectedGradients[3][5] = -0.06140596040523789
 
-        # print("\n")
-        # print(backpropagation.getGradients())
-        # print(expectedGradients)
-
         self.assertEquals(backpropagation.getGradients(), expectedGradients)
 
+        expectedBiasGradients = []
 
+        expectedBiasGradients = [0] * feedForward.getTotalNumNodes()
+        for i in range(feedForward.getTotalNumNodes()):
+            expectedBiasGradients[i] = [0] * feedForward.getTotalNumNodes()
+
+        expectedBiasGradients[0][2] = 0.0006232698073582778
+        expectedBiasGradients[0][3] = -0.00030381413438377187
+        expectedBiasGradients[1][4] = -0.126246516536673
+        expectedBiasGradients[1][5] = -0.1246820107165854
+
+        self.assertEquals(backpropagation.getBiasGradients(), expectedBiasGradients)
+
+    
+    def testCalculateWeightUpdatesWithTwoOutputs(self):
+        networkLayer = [2, 2, 2]
+        sigmoid = Sigmoid()
+        feedForward = FeedForward(networkLayer, sigmoid)
+
+        backpropagation = Backpropagation(feedForward,0.7,0.3, 0.005, 1)
+        backpropagation.initialise()
+        self.initialiseNetworkWithTwoOutputs(feedForward)
+
+        trainingSet = [0, 0, 0, 0]
+
+        feedForward.activate(trainingSet)
+        backpropagation.calculateNodeDeltas(trainingSet)
+        backpropagation.calculateGradients()
+        backpropagation.calculateWeightUpdates()
+
+        expectedWeightUpdates = []
+
+        expectedWeightUpdates = [0] * feedForward.getTotalNumNodes()
+        for i in range(feedForward.getTotalNumNodes()):
+            expectedWeightUpdates[i] = [0] * feedForward.getTotalNumNodes()
+
+        expectedWeightUpdates[0][2] = 0
+        expectedWeightUpdates[0][3] = 0
+        expectedWeightUpdates[1][2] = 0
+        expectedWeightUpdates[1][3] = 0
+        expectedWeightUpdates[2][4] = -0.04352353628111044
+        expectedWeightUpdates[2][5] = -0.04298417228366652
+        expectedWeightUpdates[3][4] = -0.04352353628111044
+        expectedWeightUpdates[3][5] = -0.04298417228366652
+
+        self.assertEquals(backpropagation.getWeightUpdates(), expectedWeightUpdates)
+
+        expectedBiasWeightUpdates = []
+
+        expectedBiasWeightUpdates = [0] * feedForward.getTotalNumNodes()
+        for i in range(feedForward.getTotalNumNodes()):
+            expectedBiasWeightUpdates[i] = [0] * feedForward.getTotalNumNodes()
+
+        expectedBiasWeightUpdates[0][2] = 0.0004362888651507944
+        expectedBiasWeightUpdates[0][3] = -0.0002126698940686403
+        expectedBiasWeightUpdates[1][4] = -0.08837256157567108
+        expectedBiasWeightUpdates[1][5] = -0.08727740750160977
+
+        self.assertEquals(backpropagation.getBiasWeightUpdates(), expectedBiasWeightUpdates)
+
+
+    def testApplyWeightChangesWithTwoOutputs(self):
+        networkLayer = [2, 2, 2]
+        sigmoid = Sigmoid()
+        feedForward = FeedForward(networkLayer, sigmoid)
+
+        backpropagation = Backpropagation(feedForward,0.7,0.3, 0.005, 1)
+        backpropagation.initialise()
+        self.initialiseNetworkWithTwoOutputs(feedForward)
+
+        trainingSet = [0, 0, 0, 0]
+
+        feedForward.activate(trainingSet)
+        backpropagation.calculateNodeDeltas(trainingSet)
+        backpropagation.calculateGradients()
+        backpropagation.calculateWeightUpdates()
+
+        expectedWeights = []
+
+        expectedWeights = [0] * feedForward.getTotalNumNodes()
+        for i in range(feedForward.getTotalNumNodes()):
+            expectedWeights[i] = [0] * feedForward.getTotalNumNodes()
+
+        expectedWeights[0][2] = 0.01
+        expectedWeights[0][3] = -0.01
+        expectedWeights[1][2] = 0.04
+        expectedWeights[1][3] = 0.04
+        expectedWeights[2][4] = 0
+        expectedWeights[2][5] = -0.02
+        expectedWeights[3][4] = -0.02
+        expectedWeights[3][5] = 0.03
+
+        self.assertEquals(feedForward.getWeights(), expectedWeights)
+
+        expectedBiasWeights = []
+
+        expectedBiasWeights = [0] * feedForward.getTotalNumNodes()
+        for i in range(feedForward.getTotalNumNodes()):
+            expectedBiasWeights[i] = [0] * feedForward.getTotalNumNodes()
+
+        expectedBiasWeights[0][2] = -0.03
+        expectedBiasWeights[0][3] = -0.03
+        expectedBiasWeights[1][4] = 0.03
+        expectedBiasWeights[1][5] = -0.01
+
+        self.assertEquals(feedForward.getBiasWeights(), expectedBiasWeights)
+
+    def testCalculateNetworkErrorWithTwoOutputs(self):
+        networkLayer = [2, 2, 2]
+        sigmoid = Sigmoid()
+        feedForward = FeedForward(networkLayer, sigmoid)
+
+        backpropagation = Backpropagation(feedForward,0.7,0.3, 0.005, 1)
+        backpropagation.initialise()
+        self.initialiseNetworkWithTwoOutputs(feedForward)
+
+        trainingSet = [0, 0, 0, 0]
+
+        feedForward.activate(trainingSet)
+        backpropagation.calculateNodeDeltas(trainingSet)
+        backpropagation.calculateGradients()
+        backpropagation.calculateWeightUpdates()
+
+        self.assertEquals(backpropagation.calculateNetworkError(trainingSet),0.25189778262809837)
 
     def testItLearnsOrFunction(self):
         sigmoid = Sigmoid()
