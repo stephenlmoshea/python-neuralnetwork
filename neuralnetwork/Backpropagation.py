@@ -172,5 +172,11 @@ class Backpropagation:
         globalError = (1/numNodes) * sum
         return globalError
 
+    def getNodeDeltas(self):
+        return self.nodeDeltas
+
+    def getGradients(self):
+        return self.gradients
+
         
 

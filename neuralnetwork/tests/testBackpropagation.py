@@ -7,6 +7,63 @@ from Backpropagation import Backpropagation
 from .testBase import TestBase
 
 class TestBackpropagation(TestBase):
+
+    def testCalculateNodeDeltasWithTwoOutputs(self):
+        networkLayer = [2, 2, 2]
+        sigmoid = Sigmoid()
+        feedForward = FeedForward(networkLayer, sigmoid)
+
+        backpropagation = Backpropagation(feedForward,0.7,0.3, 0.005, 1)
+        backpropagation.initialise()
+        self.initialiseNetworkWithTwoOutputs(feedForward)
+
+        trainingSet = [0, 0, 0, 0]
+
+        feedForward.activate(trainingSet)
+        backpropagation.calculateNodeDeltas(trainingSet)
+
+        expectedNodeDeltas = [0.0, 0.0, 0.0006232698073582778, -0.00030381413438377187, -0.126246516536673, -0.1246820107165854]
+
+        self.assertEquals(backpropagation.getNodeDeltas(), expectedNodeDeltas)
+
+    def testCalculateGradientsWithTwoOutputs(self):
+        networkLayer = [2, 2, 2]
+        sigmoid = Sigmoid()
+        feedForward = FeedForward(networkLayer, sigmoid)
+
+        backpropagation = Backpropagation(feedForward,0.7,0.3, 0.005, 1)
+        backpropagation.initialise()
+        self.initialiseNetworkWithTwoOutputs(feedForward)
+
+        trainingSet = [0, 0, 0, 0]
+
+        feedForward.activate(trainingSet)
+        backpropagation.calculateNodeDeltas(trainingSet)
+        backpropagation.calculateGradients()
+
+        expectedGradients = []
+
+        expectedGradients = [0] * feedForward.getTotalNumNodes()
+        for i in range(feedForward.getTotalNumNodes()):
+            expectedGradients[i] = [0] * feedForward.getTotalNumNodes()
+
+        expectedGradients[0][2] = 0
+        expectedGradients[0][3] = -0
+        expectedGradients[1][2] = 0
+        expectedGradients[1][3] = -0
+        expectedGradients[2][4] = -0.062176480401586354
+        expectedGradients[2][5] = -0.06140596040523789
+        expectedGradients[3][4] = -0.062176480401586354
+        expectedGradients[3][5] = -0.06140596040523789
+
+        # print("\n")
+        # print(backpropagation.getGradients())
+        # print(expectedGradients)
+
+        self.assertEquals(backpropagation.getGradients(), expectedGradients)
+
+
+
     def testItLearnsOrFunction(self):
         sigmoid = Sigmoid()
 
