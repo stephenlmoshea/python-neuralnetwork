@@ -377,6 +377,92 @@ class TestBackpropagation(TestBase):
         outputs = feedForward.getOutputs()
         self.assertTrue(outputs[0] < 0.1)
 
+    def testItLearnsXOrFunctionWithTwoHiddenUnitsAndTwoOutputs(self):
+        sigmoid = Sigmoid()
+
+        networkLayer = [2,2,2]
+
+        feedForward = FeedForward(networkLayer, sigmoid)
+
+        backpropagation = Backpropagation(feedForward,0.7,0.3,0.005)
+
+        trainingSet = [
+            [0,0,0,0],
+            [0,1,0,1],
+            [1,0,1,0],
+            [1,1,0,0]
+        ]
+
+        while True:
+            backpropagation.initialise()
+            result = backpropagation.train(trainingSet)
+
+            if(result):
+                break
+
+        feedForward.activate([0,0])
+        outputs = feedForward.getOutputs()
+        self.assertTrue(outputs[0] < 0.1)
+        self.assertTrue(outputs[1] < 0.1)
+
+        feedForward.activate([0,1])
+        outputs = feedForward.getOutputs()
+        self.assertTrue(outputs[0] < 0.1)
+        self.assertTrue(outputs[1] > 0.9)
+
+        feedForward.activate([1,0])
+        outputs = feedForward.getOutputs()
+        self.assertTrue(outputs[0] > 0.9)
+        self.assertTrue(outputs[1] < 0.1)
+
+        feedForward.activate([1,1])
+        outputs = feedForward.getOutputs()
+        self.assertTrue(outputs[0] < 0.1)
+        self.assertTrue(outputs[1] < 0.1)
+
+    def testItLearnsXOrFunctionWithThreeHiddenUnitsAndTwoOutputs(self):
+        sigmoid = Sigmoid()
+
+        networkLayer = [2,3,2]
+
+        feedForward = FeedForward(networkLayer, sigmoid)
+
+        backpropagation = Backpropagation(feedForward,0.7,0.3,0.002)
+
+        trainingSet = [
+            [0,0,0,0],
+            [0,1,0,1],
+            [1,0,1,0],
+            [1,1,0,0]
+        ]
+
+        while True:
+            backpropagation.initialise()
+            result = backpropagation.train(trainingSet)
+
+            if(result):
+                break
+
+        feedForward.activate([0,0])
+        outputs = feedForward.getOutputs()
+        self.assertTrue(outputs[0] < 0.1)
+        self.assertTrue(outputs[1] < 0.1)
+
+        feedForward.activate([0,1])
+        outputs = feedForward.getOutputs()
+        self.assertTrue(outputs[0] < 0.1)
+        self.assertTrue(outputs[1] > 0.9)
+
+        feedForward.activate([1,0])
+        outputs = feedForward.getOutputs()
+        self.assertTrue(outputs[0] > 0.9)
+        self.assertTrue(outputs[1] < 0.1)
+
+        feedForward.activate([1,1])
+        outputs = feedForward.getOutputs()
+        self.assertTrue(outputs[0] < 0.1)
+        self.assertTrue(outputs[1] < 0.1)
+
     def testItLearnsXOrFunctionWithThreeHiddenUnits(self):
         sigmoid = Sigmoid()
 
