@@ -94,7 +94,7 @@ class Backpropagation:
         
     def calculateNodeDeltas(self,trainingSet):
         networkLayers = self.network.getNetworkLayers()
-        idealOutputs = trainingSet[-1 * networkLayers[len(networkLayers)-1]['num_nodes']]
+        idealOutputs = trainingSet[-1 * networkLayers[len(networkLayers)-1]['num_nodes']:]
         startNode = networkLayers[len(networkLayers)-1]['start_node']
         endNode = networkLayers[len(networkLayers)-1]['end_node']
         activation = self.network.getActivation()
@@ -154,7 +154,7 @@ class Backpropagation:
 
     def calculateNetworkError(self,trainingSet):
         networkLayers = self.network.getNetworkLayers()
-        idealOutputs = trainingSet[-1 * networkLayers[len(networkLayers)-1]['num_nodes']]
+        idealOutputs = trainingSet[-1 * networkLayers[len(networkLayers)-1]['num_nodes']:]
         startNode = networkLayers[len(networkLayers)-1]['start_node']
         endNode = networkLayers[len(networkLayers)-1]['end_node']
         numNodes = networkLayers[len(networkLayers) -1]['num_nodes']
@@ -171,6 +171,21 @@ class Backpropagation:
 
         globalError = (1/numNodes) * sum
         return globalError
+
+    def getNodeDeltas(self):
+        return self.nodeDeltas
+
+    def getGradients(self):
+        return self.gradients
+
+    def getBiasGradients(self):
+        return self.biasGradients
+
+    def getWeightUpdates(self):
+        return self.weightUpdates
+
+    def getBiasWeightUpdates(self):
+        return self.biasWeightUpdates
 
         
 
