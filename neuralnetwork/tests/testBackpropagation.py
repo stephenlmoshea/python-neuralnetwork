@@ -182,6 +182,83 @@ class TestBackpropagation(TestBase):
         backpropagation.calculateWeightUpdates()
 
         self.assertEquals(backpropagation.calculateNetworkError(trainingSet),0.25189778262809837)
+        feedForward.activate([0,0])
+        outputs = feedForward.getOutputs()
+        print(outputs)
+
+    def testItLearnsWeightsAndOutputsForXORFunctionWithTwoOutputs(self):
+        nodesPerLayer = [2, 2, 2]
+        activation = Sigmoid()
+        network = FeedForward(nodesPerLayer, activation)
+
+        backpropagation = Backpropagation(network,0.7,0.3,0.005,1)
+
+        self.initialiseNetworkWithTwoOutputs(network)
+
+        trainingSet = [
+            [0,0,0,0],
+            [0,1,0,1],
+            [1,0,1,0],
+            [1,1,0,0]
+        ]
+
+        while True:
+            result = backpropagation.train(trainingSet)
+
+            if(result):
+                break
+
+        network.activate([0,0])
+        outputs = network.getOutputs()
+
+        self.assertEquals(outputs[0], 0.07397475104807594)
+        self.assertEquals(outputs[1], 0.07640587319838178)
+
+        network.activate([0,1])
+        outputs = network.getOutputs()
+        
+        self.assertEquals(outputs[0], 0.0011872968318554168)
+        self.assertEquals(outputs[1], 0.9006706090890231)
+
+        network.activate([1,0])
+        outputs = network.getOutputs()
+        
+        self.assertEquals(outputs[0], 0.9022231252649556)
+        self.assertEquals(outputs[1], 0.0008008541187349612)
+
+        network.activate([1,1])
+        outputs = network.getOutputs()
+
+        self.assertEquals(outputs[0], 0.06389865849681756)
+        self.assertEquals(outputs[1], 0.06729508546056018)
+
+        expectedWeights = []
+        expectedWeights = [0] * network.getTotalNumNodes()
+        for i in range(network.getTotalNumNodes()):
+            expectedWeights[i] = [0] * network.getTotalNumNodes()
+
+        expectedWeights[0][2] = 3.047244161837838
+        expectedWeights[0][3] = -3.705464338045177
+        expectedWeights[1][2] = -2.5961449172696365
+        expectedWeights[1][3] = 3.951078577457027
+        expectedWeights[2][4] = 2.610569918098228
+        expectedWeights[2][5] = -4.73001794729599
+        expectedWeights[3][4] = -7.044199442098878
+        expectedWeights[3][5] = 5.530035155194141
+
+        self.assertEquals(expectedWeights, network.getWeights())
+
+        expectedBiasWeights = []
+        expectedBiasWeights = [0] * network.getTotalNumNodes()
+        for i in range(network.getTotalNumNodes()):
+            expectedBiasWeights[i] = [0] * network.getTotalNumNodes()
+
+        expectedBiasWeights[0][2] = 0.5516274985420081
+        expectedBiasWeights[0][3] = 0.3297732838238489
+        expectedBiasWeights[1][4] = -0.08597799352073608
+        expectedBiasWeights[1][5] = -2.70779954102211
+
+        self.assertEquals(expectedBiasWeights, network.getBiasWeights())
 
     def testItLearnsOrFunction(self):
         sigmoid = Sigmoid()

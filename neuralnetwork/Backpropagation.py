@@ -76,14 +76,14 @@ class Backpropagation:
                 self.calculateWeightUpdates()
                 self.applyWeightChanges()
                 sumNetworkError += self.calculateNetworkError(trainingSets[i])
-                # logging.info('--------------------------------')
-                # logging.info("Inputs: {}, Outputs: {}, Network Error: {}".format(trainingSets[i],self.network.getOutputs(),self.calculateNetworkError(trainingSets[i])))
+                logging.info('--------------------------------')
+                logging.info("Inputs: {}, Outputs: {}, Network Error: {}".format(trainingSets[i],self.network.getOutputs(),self.calculateNetworkError(trainingSets[i])))
                 
             
             globalError = sumNetworkError/len(trainingSets)
             
-            # logging.info("Num Epochs: {}".format(self.numEpochs))
-            # logging.info("Global Error: {}".format(globalError))
+            logging.info("Num Epochs: {}".format(self.numEpochs))
+            logging.info("Global Error: {}".format(globalError))
 
             self.numEpochs = self.numEpochs + 1
 
@@ -94,7 +94,7 @@ class Backpropagation:
         
     def calculateNodeDeltas(self,trainingSet):
         networkLayers = self.network.getNetworkLayers()
-        idealOutputs = trainingSet[-1 * networkLayers[len(networkLayers)-1]['num_nodes']]
+        idealOutputs = trainingSet[-1 * networkLayers[len(networkLayers)-1]['num_nodes']:]
         startNode = networkLayers[len(networkLayers)-1]['start_node']
         endNode = networkLayers[len(networkLayers)-1]['end_node']
         activation = self.network.getActivation()
@@ -154,7 +154,7 @@ class Backpropagation:
 
     def calculateNetworkError(self,trainingSet):
         networkLayers = self.network.getNetworkLayers()
-        idealOutputs = trainingSet[-1 * networkLayers[len(networkLayers)-1]['num_nodes']]
+        idealOutputs = trainingSet[-1 * networkLayers[len(networkLayers)-1]['num_nodes']:]
         startNode = networkLayers[len(networkLayers)-1]['start_node']
         endNode = networkLayers[len(networkLayers)-1]['end_node']
         numNodes = networkLayers[len(networkLayers) -1]['num_nodes']

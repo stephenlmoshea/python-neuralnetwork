@@ -65,64 +65,6 @@ class TestFeedForward(TestBase):
         outputs = network.getOutputs()
         self.assertEquals(round(outputs[0],3), 0.505)
         self.assertEquals(round(outputs[1],3), 0.499)
-
-    def testItLearnsWeightsAndOutputsForXORFunctionWithTwoOutputs(self):
-        nodesPerLayer = [2, 2, 2]
-        activation = Sigmoid()
-        network = FeedForward(nodesPerLayer, activation)
-
-        backpropagation = Backpropagation(network,0.7,0.3)
-
-        self.initialiseNetworkWithTwoOutputs(network)
-
-        trainingSet = [
-            [0,0,0],
-            [0,1,1],
-            [1,0,1],
-            [1,1,0]
-        ]
-
-        while True:
-            result = backpropagation.train(trainingSet)
-
-            if(result):
-                break
-
-        network.activate([0,0])
-        outputs = network.getOutputs()
-        self.assertEquals(outputs[0], 0.073974751048076)
-        self.assertEquals(outputs[1], 0.076405873198382)
-
-        network.activate([0,1])
-        outputs = network.getOutputs()
-        self.assertEquals(outputs[0], 0.0011872968318554)
-        self.assertEquals(outputs[1], 0.90067060908902)
-
-        network.activate([1,0])
-        outputs = network.getOutputs()
-        self.assertEquals(outputs[0], 0.90222312526496)
-        self.assertEquals(outputs[1], 0.00080085411873496)
-
-        network.activate([1,1])
-        outputs = network.getOutputs()
-        self.assertEquals(outputs[0], 0.063898658496818)
-        self.assertEquals(outputs[1], 0.06729508546056)
-
-        expectedWeights = []
-        expectedWeights = [0] * network.getTotalNumNodes()
-        for i in range(network.getTotalNumNodes()):
-            expectedWeights[i] = [0] * network.getTotalNumNodes()
-
-        expectedWeights[0][2] = 3.0472441618378
-        expectedWeights[0][3] = -3.7054643380452
-        expectedWeights[1][2] = -2.5961449172696
-        expectedWeights[1][3] = 3.951078577457
-        expectedWeights[2][4] = 2.6105699180982
-        expectedWeights[2][5] = -4.730017947296
-        expectedWeights[3][4] = -7.0441994420989
-        expectedWeights[3][5] = 5.5300351551941
-
-        self.assertEquals(expectedWeights, network.getWeights())
         
     def getLayers(self):
         return [
