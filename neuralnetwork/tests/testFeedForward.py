@@ -28,16 +28,16 @@ class TestFeedForward(TestBase):
     def testNetworkWeightsAreInitialisedToRandomValuesInCorrectRange(self):
         self.network.initialise()
         weights = self.network.getWeights()
-        for i,connections in enumerate(weights):
-            for j,value in enumerate(connections):
-                if value != 0:
-                    self.assertLessEqual(abs(value),0.05)
+        for connections in enumerate(weights):
+            for value in enumerate(connections[1]):
+                if value[1] != 0:
+                    self.assertLessEqual(abs(value[1]),0.05)
 
     def testNetworkValuesAreInitialised(self):
         self.network.initialise()
         values = self.network.getValues()
-        for i,value in enumerate(values):
-            self.assertLessEqual(abs(value),0)
+        for value in enumerate(values):
+            self.assertLessEqual(abs(value[1]),0)
 
     def testNetworkLayersAreFullyConnected(self):
         self.network.initialise()
