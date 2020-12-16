@@ -58,6 +58,51 @@ outputs = feedForward.getOutputs()
 print(outputs[0])
 ```
 
+### Training XOR function on three layer neural network with two inputs and two output
+```py
+from neuralnetwork.FeedForward import FeedForward
+from neuralnetwork.Sigmoid import Sigmoid
+from neuralnetwork.Backpropagation import Backpropagation
+
+sigmoid = Sigmoid()
+
+networkLayer = [2,3,2]
+
+feedForward = FeedForward(networkLayer, sigmoid)
+
+backpropagation = Backpropagation(feedForward,0.7,0.3,0.002)
+
+trainingSet = [
+    [0,0,0,0],
+    [0,1,0,1],
+    [1,0,1,0],
+    [1,1,0,0]
+]
+
+while True:
+    backpropagation.initialise()
+    result = backpropagation.train(trainingSet)
+
+    if(result):
+        break
+
+feedForward.activate([0,0])
+outputs = feedForward.getOutputs()
+print(outputs)
+
+feedForward.activate([0,1])
+outputs = feedForward.getOutputs()
+print(outputs)
+
+feedForward.activate([1,0])
+outputs = feedForward.getOutputs()
+print(outputs)
+
+feedForward.activate([1,1])
+outputs = feedForward.getOutputs()
+print(outputs)
+```
+
 ### Training XOR function on three layer neural network using Hyperbolic Tangent
 ```py
 from neuralnetwork.FeedForward import FeedForward
