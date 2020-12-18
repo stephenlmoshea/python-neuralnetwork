@@ -70,7 +70,7 @@ class Backpropagation:
                     
     def train(self, trainingSets):
         self.numEpochs = 1
-        self.globalError = '';
+        self.globalError = ''
 
         starttime = timeit.default_timer()
 
