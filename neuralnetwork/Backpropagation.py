@@ -1,4 +1,9 @@
 import logging
+import timeit
+from dotenv import load_dotenv
+load_dotenv()
+
+import os
 
 class Backpropagation:
     nodeDeltas = []
@@ -12,6 +17,8 @@ class Backpropagation:
     maxNumEpochs = ''
     numEpochs = ''
     network = []
+    globalError = ''
+    trainingTime = ''
 
     def __init__(self, network, learningRate, momentum, minimumError = 0.005, maxNumEpochs = 2000):
         self.network = network
@@ -63,9 +70,15 @@ class Backpropagation:
                     
     def train(self, trainingSets):
         self.numEpochs = 1
-        logging.basicConfig(level=logging.DEBUG)
+        self.globalError = '';
+
+        starttime = timeit.default_timer()
+
+        if(os.getenv("LOG_TRAINING")=='true'):
+            logging.basicConfig(filename='training.log', level=logging.DEBUG)
         while True:
             if(self.numEpochs > self.maxNumEpochs):
+                self.trainingTime = timeit.default_timer() - starttime
                 return False
 
             sumNetworkError = 0
@@ -76,18 +89,22 @@ class Backpropagation:
                 self.calculateWeightUpdates()
                 self.applyWeightChanges()
                 sumNetworkError += self.calculateNetworkError(trainingSets[i])
-                logging.info('--------------------------------')
-                logging.info("Inputs: {}, Outputs: {}, Network Error: {}".format(trainingSets[i],self.network.getOutputs(),self.calculateNetworkError(trainingSets[i])))
+
+                if(os.getenv("LOG_TRAINING")=='true' and os.getenv("LOG_LEVEL")=='2'):
+                    logging.info('--------------------------------')
+                    logging.info("Inputs: {}, Outputs: {}, Network Error: {}".format(trainingSets[i],self.network.getOutputs(),self.calculateNetworkError(trainingSets[i])))
                 
             
-            globalError = sumNetworkError/len(trainingSets)
+            self.globalError = sumNetworkError/len(trainingSets)
             
-            logging.info("Num Epochs: {}".format(self.numEpochs))
-            logging.info("Global Error: {}".format(globalError))
+            if(os.getenv("LOG_TRAINING")=='true'):
+                logging.info("Num Epochs: {}".format(self.numEpochs))
+                logging.info("Global Error: {}".format(self.globalError))
 
             self.numEpochs = self.numEpochs + 1
 
-            if(globalError < self.minimumError):
+            if(self.globalError < self.minimumError):
+                self.trainingTime = timeit.default_timer() - starttime
                 break
 
         return True
@@ -186,6 +203,15 @@ class Backpropagation:
 
     def getBiasWeightUpdates(self):
         return self.biasWeightUpdates
+
+    def getGlobalError(self):
+        return self.globalError
+
+    def getNumEpochs(self):
+        return self.numEpochs
+
+    def getTrainingTime(self):
+        return self.trainingTime
 
         
 
