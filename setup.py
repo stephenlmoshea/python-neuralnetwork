@@ -17,7 +17,7 @@ setup(
   download_url = 'https://github.com/stephenlmoshea/python-neuralnetwork/archive/v1.1.tar.gz',    # I explain this later on
   keywords = ['NEURAL NETWORK', 'BACKPROPAGATION', 'GRADIENT DESCENT', 'SIGMOID', 'HYPERBOLIC TANGENT'],   # Keywords that define your package best
   install_requires=[            # I get to this in a second
-        'dotenv'
+        'python-dotenv'
       ],
   classifiers=[
     'Development Status :: 5 - Production/Stable',      # Chose either "3 - Alpha", "4 - Beta" or "5 - Production/Stable" as the current state of your package
