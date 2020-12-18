@@ -12,6 +12,14 @@ Trained neural networks can be saved to file and loaded back for later activatio
 ```bash
 $  pip install neuralnetwork
 ```
+
+## Logging
+### To log training to the file training.log create ./.env file with following parameters
+```py
+LOG_TRAINING=true
+LOG_LEVEL=2
+```
+
 ## Examples
 ### Training XOR function on three layer neural network with two inputs and one output
 ```py
