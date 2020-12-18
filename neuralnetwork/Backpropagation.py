@@ -74,7 +74,6 @@ class Backpropagation:
         starttime = timeit.default_timer()
 
         if(os.getenv("LOG_TRAINING")=='true'):
-            print(os.getcwd()+'/training.log')
             logging.basicConfig(filename=os.getcwd()+'/training.log', level=logging.DEBUG)
         while True:
             if(self.numEpochs > self.maxNumEpochs):
