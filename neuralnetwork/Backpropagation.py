@@ -70,6 +70,7 @@ class Backpropagation:
     def train(self, trainingSets):
         self.numEpochs = 1
         self.globalError = ''
+        networkLayers = self.network.getNetworkLayers()
 
         starttime = timeit.default_timer()
 
@@ -94,8 +95,8 @@ class Backpropagation:
                     logging.info("Inputs: {}, Outputs: {}, Network Error: {}".format(trainingSets[i],self.network.getOutputs(),self.calculateNetworkError(trainingSets[i])))
                 
             
-            self.globalError = sumNetworkError/len(trainingSets)
-            
+            self.globalError = sumNetworkError/(len(trainingSets) * networkLayers[len(networkLayers)-1]['num_nodes'])
+                        
             if(os.getenv("LOG_TRAINING")=='true'):
                 logging.info("Num Epochs: {}".format(self.numEpochs))
                 logging.info("Global Error: {}".format(self.globalError))
@@ -185,8 +186,7 @@ class Backpropagation:
             sum += error * error
             j = j+1
 
-        globalError = (1/numNodes) * sum
-        return globalError
+        return sum
 
     def getNodeDeltas(self):
         return self.nodeDeltas
