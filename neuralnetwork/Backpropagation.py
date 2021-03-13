@@ -174,7 +174,6 @@ class Backpropagation:
         idealOutputs = trainingSet[-1 * networkLayers[len(networkLayers)-1]['num_nodes']:]
         startNode = networkLayers[len(networkLayers)-1]['start_node']
         endNode = networkLayers[len(networkLayers)-1]['end_node']
-        numNodes = networkLayers[len(networkLayers) -1]['num_nodes']
         j=0
         sum=0
         for i in range(startNode,endNode+1):
