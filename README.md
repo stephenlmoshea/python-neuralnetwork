@@ -848,7 +848,7 @@ print(totalCorrect)
 
 print("Percentage correct: {}%".format(percentageCorrect))
 ```
-## Training Neural Network to Parkinsons Disease
+## Training Neural Network to Predict Parkinsons Disease
 The dataset for this project is hosted by Kaggle. To download the necessary dataset for this project, please follow the instructions below.
 
 1. Go to https://www.kaggle.com/dipayanbiswas/parkinsons-disease-speech-signal-features
