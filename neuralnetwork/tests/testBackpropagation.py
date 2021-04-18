@@ -181,7 +181,7 @@ class TestBackpropagation(TestBase):
         backpropagation.calculateGradients()
         backpropagation.calculateWeightUpdates()
 
-        self.assertEquals(backpropagation.calculateNetworkError(trainingSet),0.25189778262809837)
+        self.assertEquals(backpropagation.calculateNetworkError(trainingSet),0.5037955652561967)
         feedForward.activate([0,0])
         outputs = feedForward.getOutputs()
         print(outputs)
